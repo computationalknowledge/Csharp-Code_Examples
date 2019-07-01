@@ -1,0 +1,76 @@
+using System;
+using System.IO;
+using System.Text;
+
+namespace BinaryFileApplication
+{
+    // http://www.tutorialplus.net/Articles/csharp-program-to-find-ASCII-value.htm
+    // https://www.dotnetperls.com/ascii-table
+    // http://www.asciitable.com/
+
+    class Program
+    {
+        
+        static void Main(string[] args)
+        {   String s;
+            //      Any special reason to use a BinaryReader to read a text file? 
+            //      It would seem that a StreamReader would be much easier to use, especially 
+            //      so since it provides a ReadLine method.Incidentally, a 0x0a character is just a plain \n which, 
+            //      being often used as an end of line indicator, is pretty weird in the middle of a line.
+
+            StreamReader streamReader;
+            StreamWriter streamWriter;
+            StreamWriter streamWriter2;
+
+            try
+            {
+                streamReader = new StreamReader(File.Open("4ED15352", FileMode.Open));
+                streamWriter = new StreamWriter("C:\\d\\scantronOutput.txt");
+                streamWriter2 = new StreamWriter("C:\\d\\scantronOutputLineLength.txt");
+
+            }
+            catch (IOException e)
+            {
+                Console.WriteLine(e.Message + "\n Cannot open file.");
+                return;
+            }
+            char ch;
+            byte[] charByte;
+            int intVal;
+            try
+            {
+                // Get ASCII character.
+                char c;
+                while (!streamReader.EndOfStream)
+                {
+                    s = streamReader.ReadLine();
+                    streamWriter2.Write(s.Length+"\n");
+                    for (int i = 0; i < s.Length; i++)
+                    {
+                        ch = s[i];
+                        charByte = Encoding.ASCII.GetBytes(ch.ToString());
+                        intVal = charByte[0];
+                        //if ((intVal > 47 && intVal < 58) || (intVal > 96 && intVal < 123))
+                        {
+                            c = (char)intVal;
+                            // streamWriter.Write(c + "---");
+                            streamWriter.Write(c);
+                        }
+                        }streamWriter.Write("\n"); 
+                }
+                
+            }
+            catch (IOException e)
+            {
+                Console.WriteLine(e.Message + "\n Cannot read from file.");
+                return;
+            }
+            streamReader.Close();
+            streamWriter.Flush();
+            streamWriter.Close();
+            streamWriter2.Flush();
+            streamWriter2.Close();
+
+        }
+    }
+}
